@@ -110,6 +110,9 @@ public class Player extends Unit {
      */
     public void removeLife() {
         this.lives -=  1;
+        if(this.lives<1){
+            this.setAlive(false);
+        }
     }
 
     /**
