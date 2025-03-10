@@ -20,6 +20,10 @@ public class Player extends Unit {
     private int score;
 
     /**
+     * The starting number of lives of the player.
+     */
+    private int lives;
+    /**
      * The animations for every direction.
      */
     private final Map<Direction, Sprite> sprites;
