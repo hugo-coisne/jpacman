@@ -106,6 +106,13 @@ public class Player extends Unit {
     }
 
     /**
+     * Removes a life from the lives count.
+     */
+    public void removeLife() {
+        this.lives -=  1;
+    }
+
+    /**
      * Returns the amount of points accumulated by this player.
      *
      * @return The amount of points accumulated by this player.
