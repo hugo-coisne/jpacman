@@ -22,7 +22,7 @@ public class Player extends Unit {
     /**
      * The starting number of lives of the player.
      */
-    private int lives;
+    private int lives = 1;
     /**
      * The animations for every direction.
      */
