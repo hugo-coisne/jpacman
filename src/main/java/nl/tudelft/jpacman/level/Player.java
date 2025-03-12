@@ -115,6 +115,10 @@ public class Player extends Unit {
         }
     }
 
+    public int getLives(){
+        return this.lives;
+    }
+
     /**
      * Returns the amount of points accumulated by this player.
      *
