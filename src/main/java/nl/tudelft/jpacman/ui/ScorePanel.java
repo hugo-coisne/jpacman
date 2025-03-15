@@ -28,6 +28,10 @@ public class ScorePanel extends JPanel {
      * The map of players and the labels their scores are on.
      */
     private final Map<Player, JLabel> scoreLabels;
+    /**
+     * The map of players and the labels their lives are on.
+     */
+    private final Map<Player, JLabel> livesLabels;
 
     /**
      * The default way in which the score is shown.
@@ -40,6 +44,17 @@ public class ScorePanel extends JPanel {
      */
     private ScoreFormatter scoreFormatter = DEFAULT_SCORE_FORMATTER;
 
+    /**
+     * The default way in which the lives are shown.
+     */
+    public static final LivesFormatter DEFAULT_LIVES_FORMATTER =
+        (Player player) -> String.format("Lives: %d", player.getLives());
+    
+    /**
+     * The way to format the lives information.
+     */
+    private LivesFormatter livesFormatter = DEFAULT_LIVES_FORMATTER;
+    
     /**
      * Creates a new score panel with a column for each player.
      *
@@ -55,11 +70,19 @@ public class ScorePanel extends JPanel {
         for (int i = 1; i <= players.size(); i++) {
             add(new JLabel("Player " + i, JLabel.CENTER));
         }
+        
         scoreLabels = new LinkedHashMap<>();
+        livesLabels = new LinkedHashMap<>();
+
         for (Player player : players) {
             JLabel scoreLabel = new JLabel("0", JLabel.CENTER);
             scoreLabels.put(player, scoreLabel);
+
+            JLabel livesLabel = new JLabel("3", JLabel.CENTER);
+            livesLabels.put(player, livesLabel);
             add(scoreLabel);
+
+            add(livesLabel);
         }
     }
 
@@ -70,11 +93,19 @@ public class ScorePanel extends JPanel {
         for (Map.Entry<Player, JLabel> entry : scoreLabels.entrySet()) {
             Player player = entry.getKey();
             String score = "";
-            if (!player.isAlive()) {
-                score = "You died. ";
-            }
-            score += scoreFormatter.format(player);
+            score = scoreFormatter.format(player);
             entry.getValue().setText(score);
+        }
+
+        for (Map.Entry<Player, JLabel> entry : livesLabels.entrySet()) {
+            Player player = entry.getKey();
+            String lives;
+            if (!player.isAlive()) {
+                lives = "You died.";
+            } else {
+                lives = livesFormatter.format(player);
+            }
+            entry.getValue().setText(lives);
         }
     }
 
@@ -98,5 +129,18 @@ public class ScorePanel extends JPanel {
     public void setScoreFormatter(ScoreFormatter scoreFormatter) {
         assert scoreFormatter != null;
         this.scoreFormatter = scoreFormatter;
+    }
+
+     /**
+     * Provide means to format the lives for a given player.
+     */
+    public interface LivesFormatter {
+
+        /**
+         * Format the lives of a given player.
+         * @param player The player and its lives
+         * @return Formatted lives.
+         */
+        String format(Player player);
     }
 }
