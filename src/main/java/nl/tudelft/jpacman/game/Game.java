@@ -5,6 +5,7 @@ import java.util.List;
 import nl.tudelft.jpacman.board.Direction;
 import nl.tudelft.jpacman.level.Level;
 import nl.tudelft.jpacman.level.Level.LevelObserver;
+import nl.tudelft.jpacman.level.Player.LifeObserver;
 import nl.tudelft.jpacman.level.Player;
 import nl.tudelft.jpacman.points.PointCalculator;
 
@@ -13,7 +14,7 @@ import nl.tudelft.jpacman.points.PointCalculator;
  *
  * @author Jeroen Roosen 
  */
-public abstract class Game implements LevelObserver {
+public abstract class Game implements LevelObserver, LifeObserver {
 
     /**
      * <code>true</code> if the game is in progress.
@@ -53,6 +54,7 @@ public abstract class Game implements LevelObserver {
             if (getLevel().isAnyPlayerAlive() && getLevel().remainingPellets() > 0) {
                 inProgress = true;
                 getLevel().addObserver(this);
+                getPlayers().get(0).addObserver(this);
                 getLevel().start();
             }
         }
@@ -60,6 +62,13 @@ public abstract class Game implements LevelObserver {
 
     /**
      * Pauses the game.
+     */
+    public void respawn() {
+        
+    }
+
+    /**
+     * Stops the game.
      */
     public void stop() {
         synchronized (progressLock) {
@@ -112,5 +121,10 @@ public abstract class Game implements LevelObserver {
     @Override
     public void levelLost() {
         stop();
+    }
+
+    @Override
+    public void lifeLost() {
+        respawn();
     }
 }

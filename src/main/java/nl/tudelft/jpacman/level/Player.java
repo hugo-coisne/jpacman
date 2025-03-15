@@ -1,6 +1,8 @@
 package nl.tudelft.jpacman.level;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import nl.tudelft.jpacman.board.Direction;
 import nl.tudelft.jpacman.board.Unit;
@@ -23,6 +25,12 @@ public class Player extends Unit {
      * The starting number of lives of the player.
      */
     private int lives = 3;
+
+    /**
+     * The objects observing this player.
+     */
+    private final Set<LifeObserver> observers;
+
     /**
      * The animations for every direction.
      */
@@ -57,6 +65,27 @@ public class Player extends Unit {
         this.sprites = spriteMap;
         this.deathSprite = deathAnimation;
         deathSprite.setAnimating(false);
+        this.observers = new HashSet<>();
+    }
+
+    /**
+     * Adds an observer that will be notified when a life is lost.
+     *
+     * @param observer
+     *            The observer that will be notified.
+     */
+    public void addObserver(LifeObserver observer) {
+        observers.add(observer);
+    }
+
+    /**
+     * Removes an observer if it was listed.
+     *
+     * @param observer
+     *            The observer to be removed.
+     */
+    public void removeObserver(LifeObserver observer) {
+        observers.remove(observer);
     }
 
     /**
@@ -110,9 +139,8 @@ public class Player extends Unit {
      */
     public void removeLife() {
         this.lives -=  1;
-        if(this.lives<1){
-            this.setAlive(false);
-        }
+        updateObservers();
+        this.setAlive(false);
     }
 
     public int getLives(){
@@ -145,5 +173,22 @@ public class Player extends Unit {
      */
     public void addPoints(int points) {
         score += points;
+    }
+
+    /**
+     * Updates the observers about the state of this level.
+     */
+    private void updateObservers() {
+        for (LifeObserver observer : observers) {
+            observer.lifeLost();
+        }
+    }
+
+    public interface LifeObserver {
+        /**
+         * A life has been lost. The level should be restarted when
+         * this event is received.
+         */
+        void lifeLost();
     }
 }
