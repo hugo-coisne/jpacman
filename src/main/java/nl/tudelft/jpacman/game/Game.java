@@ -125,6 +125,8 @@ public abstract class Game implements LevelObserver, LifeObserver {
 
     @Override
     public void lifeLost() {
-        respawn();
+        // getLevel().stop();
+        getLevel().resetPositions();
+        getPlayers().get(0).setAlive(true);
     }
 }

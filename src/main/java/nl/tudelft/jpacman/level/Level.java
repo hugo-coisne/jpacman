@@ -147,9 +147,26 @@ public class Level {
         players.add(player);
         Square square = startSquares.get(startSquareIndex);
         player.occupy(square);
+        player.setStartingSquare(square);
         startSquareIndex++;
         startSquareIndex %= startSquares.size();
     }
+
+    public void resetPositions() {
+        // Reset player positions
+        for (Player player : players) {
+            placePlayerOnStartingSquare(player);
+        }
+    
+        // Reset ghost positions
+        for (Ghost ghost : npcs.keySet()) {
+            ghost.occupy(ghost.getStartingSquare());
+        }
+    }
+
+    public void placePlayerOnStartingSquare(Player player){
+        player.occupy(player.getStartingSquare());
+    } 
 
     /**
      * Returns the board of this level.

@@ -18,78 +18,95 @@ public abstract class Unit {
      * The direction this unit is facing.
      */
     private Direction direction;
-
-    /**
-     * Creates a unit that is facing east.
-     */
-    protected Unit() {
-        this.direction = Direction.EAST;
-    }
-
-    /**
-     * Sets this unit to face the new direction.
-     * @param newDirection The new direction this unit is facing.
-     */
-    public void setDirection(Direction newDirection) {
-        this.direction = newDirection;
-    }
-
-    /**
-     * Returns the current direction this unit is facing.
-     * @return The current direction this unit is facing.
-     */
-    public Direction getDirection() {
-        return this.direction;
-    }
-
-    /**
-     * Returns the square this unit is currently occupying.
-     * Precondition: <code>hasSquare()</code>.
-     *
-     * @return The square this unit is currently occupying.
-     */
-    public Square getSquare() {
-        assert invariant();
-        assert square != null;
-        return square;
-    }
-
-    /**
-     * Returns whether this unit is currently on  a square.
-     *
-     * @return True iff the unit is occupying a square at the moment.
-     */
-    public boolean hasSquare() {
-        return square != null;
-    }
-
-    /**
-     * Occupies the target square iff this unit is allowed to as decided by
-     * {@link Square#isAccessibleTo(Unit)}.
-     *
-     * @param target
-     *            The square to occupy.
-     */
-    public void occupy(Square target) {
-        assert target != null;
-
-        if (square != null) {
-            square.remove(this);
+    
+        private Square startingSquare;
+    
+        /**
+         * Creates a unit that is facing east.
+         */
+        protected Unit() {
+            this.direction = Direction.EAST;
         }
-        square = target;
-        target.put(this);
-        assert invariant();
+    
+        /**
+         * Sets this unit to face the new direction.
+         * @param newDirection The new direction this unit is facing.
+         */
+        public void setDirection(Direction newDirection) {
+            this.direction = newDirection;
+        }
+    
+        /**
+         * Returns the current direction this unit is facing.
+         * @return The current direction this unit is facing.
+         */
+        public Direction getDirection() {
+            return this.direction;
+        }
+    
+        /**
+         * Returns the square this unit is currently occupying.
+         * Precondition: <code>hasSquare()</code>.
+         *
+         * @return The square this unit is currently occupying.
+         */
+        public Square getSquare() {
+            assert invariant();
+            assert square != null;
+            return square;
+        }
+    
+        /**
+         * Returns whether this unit is currently on  a square.
+         *
+         * @return True iff the unit is occupying a square at the moment.
+         */
+        public boolean hasSquare() {
+            return square != null;
+        }
+    
+        /**
+         * Occupies the target square iff this unit is allowed to as decided by
+         * {@link Square#isAccessibleTo(Unit)}.
+         *
+         * @param target
+         *            The square to occupy.
+         */
+        public void occupy(Square target) {
+            assert target != null;
+    
+            if (square != null) {
+                square.remove(this);
+            }
+            square = target;
+            target.put(this);
+            assert invariant();
+        }
+    
+        /**
+         * Leaves the currently occupying square, thus removing this unit from the board.
+         */
+        public void leaveSquare() {
+            if (square != null) {
+                square.remove(this);
+                square = null;
+            }
+            assert invariant();
+        }
+    
+    public void setStartingSquare(Square square) {
+        startingSquare = square;
     }
 
-    /**
-     * Leaves the currently occupying square, thus removing this unit from the board.
-     */
-    public void leaveSquare() {
-        if (square != null) {
-            square.remove(this);
-            square = null;
+    public Square getStartingSquare() {
+        return startingSquare;
+    }
+
+    public void resetPosition() {
+        if (startingSquare != null) {
+            leaveSquare();
+            occupy(startingSquare);
         }
-        assert invariant();
     }
 
     /**
