@@ -140,7 +140,9 @@ public class Player extends Unit {
     public void removeLife() {
         this.lives -=  1;
         updateObservers();
-        this.setAlive(false);
+        if (this.lives<1){
+            this.setAlive(false);
+        }
     }
 
     public int getLives(){
