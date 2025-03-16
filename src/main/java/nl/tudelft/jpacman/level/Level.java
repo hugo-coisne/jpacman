@@ -21,7 +21,7 @@ import nl.tudelft.jpacman.npc.Ghost;
  * A level of Pac-Man. A level consists of the board with the players and the
  * AIs on it.
  *
- * @author Jeroen Roosen 
+ * @author Jeroen Roosen
  */
 @SuppressWarnings("PMD.TooManyMethods")
 public class Level {
@@ -82,16 +82,16 @@ public class Level {
      * Creates a new level for the board.
      *
      * @param board
-     *            The board for the level.
+     *                       The board for the level.
      * @param ghosts
-     *            The ghosts on the board.
+     *                       The ghosts on the board.
      * @param startPositions
-     *            The squares on which players start on this board.
+     *                       The squares on which players start on this board.
      * @param collisionMap
-     *            The collection of collisions that should be handled.
+     *                       The collection of collisions that should be handled.
      */
     public Level(Board board, List<Ghost> ghosts, List<Square> startPositions,
-                 CollisionMap collisionMap) {
+            CollisionMap collisionMap) {
         assert board != null;
         assert ghosts != null;
         assert startPositions != null;
@@ -113,7 +113,7 @@ public class Level {
      * Adds an observer that will be notified when the level is won or lost.
      *
      * @param observer
-     *            The observer that will be notified.
+     *                 The observer that will be notified.
      */
     public void addObserver(LevelObserver observer) {
         observers.add(observer);
@@ -123,7 +123,7 @@ public class Level {
      * Removes an observer if it was listed.
      *
      * @param observer
-     *            The observer to be removed.
+     *                 The observer to be removed.
      */
     public void removeObserver(LevelObserver observer) {
         observers.remove(observer);
@@ -135,7 +135,7 @@ public class Level {
      * no effect.
      *
      * @param player
-     *            The player to register.
+     *               The player to register.
      */
     public void registerPlayer(Player player) {
         assert player != null;
@@ -155,18 +155,14 @@ public class Level {
     public void resetPositions() {
         // Reset player positions
         for (Player player : players) {
-            placePlayerOnStartingSquare(player);
+            player.occupy(player.getStartingSquare());
         }
-    
+
         // Reset ghost positions
         for (Ghost ghost : npcs.keySet()) {
             ghost.occupy(ghost.getStartingSquare());
         }
     }
-
-    public void placePlayerOnStartingSquare(Player player){
-        player.occupy(player.getStartingSquare());
-    } 
 
     /**
      * Returns the board of this level.
@@ -182,9 +178,9 @@ public class Level {
      * collisions.
      *
      * @param unit
-     *            The unit to move.
+     *                  The unit to move.
      * @param direction
-     *            The direction to move the unit in.
+     *                  The direction to move the unit in.
      */
     public void move(Unit unit, Direction direction) {
         assert unit != null;
@@ -248,7 +244,7 @@ public class Level {
             ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
 
             service.schedule(new NpcMoveTask(service, npc),
-                npc.getInterval() / 2, TimeUnit.MILLISECONDS);
+                    npc.getInterval() / 2, TimeUnit.MILLISECONDS);
 
             npcs.put(npc, service);
         }
@@ -350,9 +346,9 @@ public class Level {
          * Creates a new task.
          *
          * @param service
-         *            The service that executes the task.
+         *                The service that executes the task.
          * @param npc
-         *            The NPC to move.
+         *                The NPC to move.
          */
         NpcMoveTask(ScheduledExecutorService service, Ghost npc) {
             this.service = service;

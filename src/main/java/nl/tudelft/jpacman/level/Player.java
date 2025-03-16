@@ -12,7 +12,7 @@ import nl.tudelft.jpacman.sprite.Sprite;
 /**
  * A player operated unit in our game.
  *
- * @author Jeroen Roosen 
+ * @author Jeroen Roosen
  */
 public class Player extends Unit {
 
@@ -55,9 +55,10 @@ public class Player extends Unit {
      * Creates a new player with a score of 0 points.
      *
      * @param spriteMap
-     *            A map containing a sprite for this player for every direction.
+     *                       A map containing a sprite for this player for every
+     *                       direction.
      * @param deathAnimation
-     *            The sprite to be shown when this player dies.
+     *                       The sprite to be shown when this player dies.
      */
     protected Player(Map<Direction, Sprite> spriteMap, AnimatedSprite deathAnimation) {
         this.score = 0;
@@ -72,7 +73,7 @@ public class Player extends Unit {
      * Adds an observer that will be notified when a life is lost.
      *
      * @param observer
-     *            The observer that will be notified.
+     *                 The observer that will be notified.
      */
     public void addObserver(LifeObserver observer) {
         observers.add(observer);
@@ -82,7 +83,7 @@ public class Player extends Unit {
      * Removes an observer if it was listed.
      *
      * @param observer
-     *            The observer to be removed.
+     *                 The observer to be removed.
      */
     public void removeObserver(LifeObserver observer) {
         observers.remove(observer);
@@ -97,13 +98,17 @@ public class Player extends Unit {
         return alive;
     }
 
+    public void playDeathAnimation() {
+        deathSprite.restart();
+    }
+
     /**
      * Sets whether this player is alive or not.
      *
      * If the player comes back alive, the {@link killer} will be reset.
      *
      * @param isAlive
-     *            <code>true</code> iff this player is alive.
+     *                <code>true</code> iff this player is alive.
      */
     public void setAlive(boolean isAlive) {
         if (isAlive) {
@@ -111,7 +116,7 @@ public class Player extends Unit {
             this.killer = null;
         }
         if (!isAlive) {
-            deathSprite.restart();
+            playDeathAnimation();
         }
         this.alive = isAlive;
     }
@@ -119,7 +124,8 @@ public class Player extends Unit {
     /**
      * Returns the unit that caused the death of Pac-Man.
      *
-     * @return <code>Unit</code> iff the player died by collision, otherwise <code>null</code>.
+     * @return <code>Unit</code> iff the player died by collision, otherwise
+     *         <code>null</code>.
      */
     public Unit getKiller() {
         return killer;
@@ -131,21 +137,19 @@ public class Player extends Unit {
      * @param killer is set if collision with ghost happens.
      */
     public void setKiller(Unit killer) {
-        this.killer =  killer;
+        this.killer = killer;
     }
 
     /**
      * Removes a life from the lives count.
      */
     public void removeLife() {
-        this.lives -=  1;
+        this.lives -= 1;
+        this.setAlive(false);
         updateObservers();
-        if (this.lives<1){
-            this.setAlive(false);
-        }
     }
 
-    public int getLives(){
+    public int getLives() {
         return this.lives;
     }
 
@@ -170,8 +174,8 @@ public class Player extends Unit {
      * Adds points to the score of this player.
      *
      * @param points
-     *            The amount of points to add to the points this player already
-     *            has.
+     *               The amount of points to add to the points this player already
+     *               has.
      */
     public void addPoints(int points) {
         score += points;

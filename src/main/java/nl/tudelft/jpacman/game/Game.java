@@ -1,6 +1,9 @@
 package nl.tudelft.jpacman.game;
 
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import nl.tudelft.jpacman.board.Direction;
 import nl.tudelft.jpacman.level.Level;
@@ -12,7 +15,7 @@ import nl.tudelft.jpacman.points.PointCalculator;
 /**
  * A basic implementation of a Pac-Man game.
  *
- * @author Jeroen Roosen 
+ * @author Jeroen Roosen
  */
 public abstract class Game implements LevelObserver, LifeObserver {
 
@@ -36,7 +39,7 @@ public abstract class Game implements LevelObserver, LifeObserver {
      * Creates a new game.
      *
      * @param pointCalculator
-     *             The way to calculate points upon collisions.
+     *                        The way to calculate points upon collisions.
      */
     protected Game(PointCalculator pointCalculator) {
         this.pointCalculator = pointCalculator;
@@ -58,13 +61,6 @@ public abstract class Game implements LevelObserver, LifeObserver {
                 getLevel().start();
             }
         }
-    }
-
-    /**
-     * Pauses the game.
-     */
-    public void respawn() {
-        
     }
 
     /**
@@ -101,9 +97,9 @@ public abstract class Game implements LevelObserver, LifeObserver {
      * Moves the specified player one square in the given direction.
      *
      * @param player
-     *            The player to move.
+     *                  The player to move.
      * @param direction
-     *            The direction to move in.
+     *                  The direction to move in.
      */
     public void move(Player player, Direction direction) {
         if (isInProgress()) {
@@ -125,6 +121,14 @@ public abstract class Game implements LevelObserver, LifeObserver {
 
     @Override
     public void lifeLost() {
-        getLevel().resetPositions();
+        stop();
+        if (getPlayers().get(0).getLives() > 0) {
+            ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+            scheduler.schedule(() -> {
+                getLevel().resetPositions();
+                getPlayers().get(0).setAlive(true);
+                start();
+            }, 3000, TimeUnit.MILLISECONDS); // Adjust the delay as needed
+        }
     }
 }
